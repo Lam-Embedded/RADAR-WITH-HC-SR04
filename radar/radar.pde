@@ -231,6 +231,11 @@ void drawText(int idx) {
 
   int ang = iAngle[idx];
   int dist = iDistance[idx];
+  
+  if (dist == 100) {
+     dist = 0; 
+  }
+  
   int flag1 = 0;
   
   switch (idx) {

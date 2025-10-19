@@ -33,6 +33,7 @@ volatile uint8_t count = 0;
 long readDistance(int trigPin, int echoPin);
 // Ham hoat dong
 void action (long &dist1, long &dist2, long &dist3, uint8_t countStatus);
+void stopSystem();
 
 void setup() {
     Serial.begin(115200);
@@ -61,14 +62,22 @@ void setup() {
 
 void loop() {
     long d1 = 0, d2 = 0, d3 = 0;
+    angle = angle + direction;
+    if (angle >= 180 || angle <= 0) {
+        direction = -direction;
+    }
+
+    myservo.write(angle);
+    delay(30);
 
     int reading = digitalRead(BUTTON_CHANGE);
     if (digitalRead(BUTTON_START) == LOW) { 
         delay(50);
         if (digitalRead(BUTTON_START) == LOW) {
             flag = true;
-            analogWrite(speaker, 100);
-            analogWrite(speaker, 0);
+            digitalWrite(speaker, HIGH);
+            delay(10);
+            digitalWrite(speaker, LOW);
         }
     }
 
@@ -82,9 +91,11 @@ void loop() {
             
             if (buttonChangeState == HIGH) {
                 count++;
-                analogWrite(speaker, 100);
-                analogWrite(speaker, 0);
             }
+
+            digitalWrite(speaker, HIGH);
+            delay(10);
+            digitalWrite(speaker, LOW);
         }
     }
     if (count > 3) count = 0;
@@ -122,12 +133,6 @@ void stopSystem() {
 }
 
 void action (long &dist1, long &dist2, long &dist3, uint8_t countStatus) {
-    angle += direction;
-    if (angle >= 179 || angle <= 1) {
-        direction = -direction;
-    }
-    myservo.write(angle);
-    delay(30);
     dist1 = readDistance(trig1, echo1);
     dist1 = (dist1 > 30) ? 100 : dist1;
     delay(50);
@@ -139,16 +144,16 @@ void action (long &dist1, long &dist2, long &dist3, uint8_t countStatus) {
 
     switch (countStatus) {
     case 1:
-        dist2 = dist2 * 2;
-        dist3 = dist3 * 2;
+        dist2 = 100;
+        dist3 = 100;
         break;
     case 2:
-        dist1 = dist1 * 2;
-        dist3 = dist3 * 2;
+        dist1 = 100;
+        dist3 = 100;
         break;
     case 3:
-        dist1 = dist1 * 2;
-        dist2 = dist2 * 2;
+        dist1 = 100;
+        dist2 = 100;
         break;
     default:
         break;
