@@ -19,7 +19,7 @@ const uint8_t speaker = 3;
 
 Servo myservo;
 uint8_t angle = 0;
-int8_t direction = 1;
+uint8_t direction = 1;
 
 uint8_t buttonChangeState = HIGH;
 uint8_t lastButtonChangeState = HIGH;
@@ -62,14 +62,6 @@ void setup() {
 
 void loop() {
     long d1 = 0, d2 = 0, d3 = 0;
-    angle = angle + direction;
-    if (angle >= 180 || angle <= 0) {
-        direction = -direction;
-    }
-
-    myservo.write(angle);
-    delay(30);
-
     int reading = digitalRead(BUTTON_CHANGE);
     if (digitalRead(BUTTON_START) == LOW) { 
         delay(50);
@@ -133,14 +125,23 @@ void stopSystem() {
 }
 
 void action (long &dist1, long &dist2, long &dist3, uint8_t countStatus) {
+
+    if (angle > 179 || angle < 1) {
+        direction = -direction;
+    }
+    angle += direction;
+    angle = constrain(angle, 0, 180);
+    myservo.write(angle);
+    delay(15);
+    
     dist1 = readDistance(trig1, echo1);
-    dist1 = (dist1 > 30) ? 100 : dist1;
+    dist1 = (dist1 > 20) ? 100 : dist1;
     delay(50);
     dist2 = readDistance(trig2, echo2);
-    dist2 = (dist2 > 60) ? 100 : dist2;
+    dist2 = (dist2 > 40) ? 100 : dist2;
     delay(50);
     dist3 = readDistance(trig3, echo3);   
-    dist3 = (dist3 > 90) ? 100 : dist3;
+    dist3 = (dist3 > 60) ? 100 : dist3;
 
     switch (countStatus) {
     case 1:
