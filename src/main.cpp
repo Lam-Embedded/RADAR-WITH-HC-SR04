@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <Servo.h>
 
-// ------------------------- PIN CONFIG -------------------------
 const uint8_t trig1 = 8;
 const uint8_t echo1 = 7;
 
