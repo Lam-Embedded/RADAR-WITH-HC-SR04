@@ -18,29 +18,24 @@ const uint8_t BUTTON_STOP   = 2;
 const uint8_t BUTTON_CHANGE = 4;
 const uint8_t speaker       = 3;
 
-// ------------------------- VARIABLES -------------------------
 Servo myservo;
 
 uint8_t angle = 0;
 int8_t direction = 1; 
-uint8_t stepAngle = 3;   // TỐC ĐỘ QUÉT SERVO
+uint8_t stepAngle = 2; 
 volatile bool running = false;
 volatile uint8_t mode = 0;
 
-// Debounce nút CHANGE
 uint8_t buttonChangeState = HIGH;
 uint8_t lastButtonChangeState = HIGH;
 unsigned long lastDebounce = 0;
 const unsigned long debounceDelay = 50;
 
-// ------------------------ FUNCTION DECLARE --------------------
+
 long readDistance(int trigPin, int echoPin);
 void runRadar();
 void stopSystem();
 
-// ===============================================================
-//                           SETUP
-// ===============================================================
 void setup() {
     Serial.begin(115200);
 
@@ -65,9 +60,6 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(BUTTON_STOP), stopSystem, FALLING);
 }
 
-// ===============================================================
-//                              LOOP
-// ===============================================================
 void loop() {
 
     // ----------- NÚT START -----------
@@ -105,17 +97,11 @@ void loop() {
     }
 }
 
-// ===============================================================
-//                           STOP INTERRUPT
-// ===============================================================
 void stopSystem() {
     running = false;
     mode = 0;
 }
 
-// ===============================================================
-//                         RADAR ENGINE
-// ===============================================================
 void runRadar() {
     static unsigned long lastServoMove = 0;
     const unsigned long servoPeriod = 20;  // mỗi 20ms cập nhật góc
@@ -163,9 +149,6 @@ void runRadar() {
     Serial.println(data);
 }
 
-// ===============================================================
-//                    ULTRASONIC - FAST VERSION
-// ===============================================================
 long readDistance(int trigPin, int echoPin) {
     digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
@@ -173,10 +156,10 @@ long readDistance(int trigPin, int echoPin) {
     delayMicroseconds(5);
     digitalWrite(trigPin, LOW);
 
-    long duration = pulseIn(echoPin, HIGH, 15000);  // 15ms timeout nhanh
-    if (duration == 0) return 100;                 // không phản hồi
+    long duration = pulseIn(echoPin, HIGH, 15000);  
+    if (duration == 0) return 100;                 
 
-    long dist = duration / 58;   // cm
-    if (dist > 200) dist = 100;  // chặn nhiễu
+    long dist = duration / 58;   
+    if (dist > 200) dist = 100;  
     return dist;
 }
