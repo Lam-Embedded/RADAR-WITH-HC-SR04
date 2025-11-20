@@ -1,22 +1,6 @@
 #include <Arduino.h>
 #include <Servo.h>
 
-const uint8_t trig1 = 8;
-const uint8_t echo1 = 7;
-
-const uint8_t trig2 = 10;
-const uint8_t echo2 = 9;
-
-const uint8_t trig3 = 12;
-const uint8_t echo3 = 11;
-
-const uint8_t SERVO_PIN = 6;
-
-const uint8_t BUTTON_START  = 5;
-const uint8_t BUTTON_STOP   = 2;
-const uint8_t BUTTON_CHANGE = 4;
-const uint8_t speaker       = 3;
-
 Servo myservo;
 
 uint8_t angle = 0;
